@@ -18,3 +18,8 @@ EXPOSE 80
 
 # Copy custom PHP configuration
 COPY custom-php.ini /usr/local/etc/php/conf.d/
+
+# Install required extensions
+RUN apt-get update && apt-get install -y \
+        zip unzip libzip-dev \
+    && docker-php-ext-install zip
