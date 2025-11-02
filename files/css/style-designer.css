@@ -59,6 +59,7 @@ body{
     height: calc(100vh - 64px);
     border: none;
     background-color: #fff;
+    flex: 1 1 auto;
 }
 .designer-page #configPanel{
     max-width: 720px;
@@ -79,4 +80,125 @@ body{
 .btn-primary:focus {
     background-color: #107275;
     border-color: #107275;
+}
+.preview-workspace{
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 1rem;
+}
+.preview-workspace .css-editor{
+    flex: 0 0 420px;
+    max-width: 45%;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+}
+.css-editor .card-body{
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 112px);
+    padding: 1rem;
+}
+.css-editor form{
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+#cssMessages{
+    min-height: 1.5rem;
+}
+.code-editor{
+    position: relative;
+    height: 100%;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    background-color: #101623;
+    overflow: hidden;
+    font-family: var(--bs-font-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+.code-editor:focus-within{
+    border-color: #0ba1a1;
+    box-shadow: 0 0 0 0.2rem rgba(11, 161, 161, 0.25);
+}
+.code-editor__highlight{
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0.75rem 0.875rem;
+    overflow: auto;
+    pointer-events: none;
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-wrap: normal;
+    tab-size: 4;
+    color: #e5e7eb;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    box-sizing: border-box;
+}
+.code-editor__highlight::-webkit-scrollbar{
+    display: none;
+}
+.code-editor__highlight{
+    scrollbar-width: none;
+}
+.code-editor__input{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    padding: 0.75rem 0.875rem;
+    border: 0;
+    background: transparent;
+    color: transparent;
+    caret-color: #0ba1a1;
+    resize: none;
+    font-size: inherit;
+    line-height: inherit;
+    tab-size: 4;
+    z-index: 1;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+.code-editor__input:focus{
+    outline: none;
+}
+.token-comment{
+    color: #94a3b8;
+    font-style: italic;
+}
+.token-string{
+    color: #fbbf24;
+}
+.token-property{
+    color: #38bdf8;
+}
+.token-number{
+    color: #f472b6;
+}
+.token-hex{
+    color: #f87171;
+}
+.token-at{
+    color: #34d399;
+}
+@media (max-width: 991.98px){
+    .preview-workspace{
+        flex-direction: column;
+    }
+    .preview-workspace .css-editor{
+        max-width: 100%;
+        width: 100%;
+    }
+    .css-editor .card-body{
+        height: auto;
+        min-height: 240px;
+    }
+    .code-editor{
+        min-height: 240px;
+    }
 }

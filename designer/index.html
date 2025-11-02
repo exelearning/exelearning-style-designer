@@ -31,6 +31,7 @@
             </div>
             <div class="config-group btn-group btn-group-sm">
                 <button type="button" class="btn btn-light" id="configTab" aria-pressed="false">Theme configuration</button>
+                <button type="button" class="btn btn-light" id="cssTab" aria-pressed="false" disabled>CSS editor</button>
             </div>
             <div class="action-group">
                 <button type="button" class="btn btn-outline-light btn-sm" id="openNewWindow" title="Open in new window" disabled>
@@ -40,7 +41,33 @@
         </header>
         <main class="container-fluid py-3 designer-main">
             <div id="previewPanel">
-                <iframe id="viewer" title="Content preview" hidden></iframe>
+                <div class="preview-workspace" id="previewWorkspace">
+                    <iframe id="viewer" title="Content preview" hidden></iframe>
+                    <section class="card shadow-sm d-none css-editor" id="cssPanel">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h2 class="h5 mb-0">CSS Editor</h2>
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-secondary" id="reloadCss">Reload</button>
+                                    <button type="button" class="btn btn-outline-secondary" id="downloadCss">Download</button>
+                                </div>
+                            </div>
+                            <div id="cssMessages" aria-live="polite"></div>
+                            <form id="cssForm" class="d-flex flex-column flex-grow-1">
+                                <div class="mb-2 flex-grow-1">
+                                    <label for="cssEditor" class="form-label visually-hidden">CSS</label>
+                                    <div class="code-editor" id="cssEditorWrapper">
+                                        <pre class="code-editor__highlight" id="cssHighlight" aria-hidden="true"></pre>
+                                        <textarea class="code-editor__input font-monospace" id="cssEditor" name="css" rows="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary btn-sm" id="saveCss">Apply to preview</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </div>
                 <div class="container p-4" id="emptyState" hidden>
                     <h1 class="visually-hidden">Style Designer</h1>
                     <div class="alert alert-info">

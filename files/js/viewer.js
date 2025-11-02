@@ -15,14 +15,32 @@
     const configPanel = document.getElementById('configPanel');
     const previewPanel = document.getElementById('previewPanel');
     const configTab = document.getElementById('configTab');
+    const cssTab = document.getElementById('cssTab');
+    const cssPanel = document.getElementById('cssPanel');
+    const cssForm = document.getElementById('cssForm');
+    const cssEditor = document.getElementById('cssEditor');
+    const cssHighlight = document.getElementById('cssHighlight');
+    const cssMessages = document.getElementById('cssMessages');
+    const cssReloadButton = document.getElementById('reloadCss');
+    const cssDownloadButton = document.getElementById('downloadCss');
+    const saveCssButton = document.getElementById('saveCss');
 
-    if (!viewer || !viewSelector || !emptyState || !newWindowButton || !configPanel || !previewPanel || !configTab) return;
+    if (!viewer || !viewSelector || !emptyState || !newWindowButton || !configPanel || !previewPanel || !configTab || !cssTab || !cssPanel || !cssForm || !cssEditor || !cssHighlight || !saveCssButton) return;
 
     const buttons = Array.from(viewSelector.querySelectorAll('[data-view]'));
     const state = {
         sources: {},
         activeView: null
     };
+    const cssState = {
+        lastSaved: '',
+        visible: false,
+        dirty: false,
+        applyTimer: null,
+        applying: false,
+        applyQueued: false
+    };
+    const CSS_APPLY_DEBOUNCE = 800;
 
     const rootPath = (() => {
         if (StyleStorageRef && typeof StyleStorageRef.scope === 'string') {
@@ -56,6 +74,310 @@
         'downloadable'
     ];
 
+    function escapeHtmlLite(value = '') {
+        return value.replace(/[&<>'"]/g, (char) => {
+            switch (char) {
+                case '&': return '&amp;';
+                case '<': return '&lt;';
+                case '>': return '&gt;';
+                case '\'': return '&#39;';
+                case '"': return '&quot;';
+                default: return char;
+            }
+        });
+    }
+
+    function highlightCssTokens(source = '') {
+        const normalized = source.replace(/\r\n?/g, '\n');
+
+        const tokenMatchers = [
+            {
+                type: 'comment',
+                regex: /\/\*[\s\S]*?\*\//g
+            },
+            {
+                type: 'string',
+                regex: /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g
+            },
+            {
+                type: 'property',
+                regex: /(^|[{;]\s*)([a-z_-][\w-]*)\s*(?=:)/gi,
+                range(match) {
+                    const prefixLength = match[1] ? match[1].length : 0;
+                    const start = match.index + prefixLength;
+                    return { start, end: start + match[2].length };
+                }
+            },
+            {
+                type: 'at',
+                regex: /@\w+/g
+            },
+            {
+                type: 'hex',
+                regex: /#[0-9a-f]{3,8}\b/gi
+            },
+            {
+                type: 'number',
+                regex: /\b\d*\.?\d+(?:px|em|rem|vh|vw|%)?/gi
+            }
+        ];
+
+        const tokens = [];
+
+        function isOccupied(start, end) {
+            return tokens.some((token) => !(end <= token.start || start >= token.end));
+        }
+
+        tokenMatchers.forEach((matcher) => {
+            const regex = new RegExp(matcher.regex.source, matcher.regex.flags);
+            let match = regex.exec(normalized);
+            while (match) {
+                let start = match.index;
+                let end = regex.lastIndex;
+
+                if (typeof matcher.range === 'function') {
+                    const customRange = matcher.range(match);
+                    start = customRange.start;
+                    end = customRange.end;
+                }
+
+                if (!isOccupied(start, end)) {
+                    tokens.push({
+                        type: matcher.type,
+                        start,
+                        end
+                    });
+                }
+
+                match = regex.exec(normalized);
+            }
+        });
+
+        if (!tokens.length) {
+            return escapeHtmlLite(normalized) || '&nbsp;';
+        }
+
+        tokens.sort((a, b) => a.start - b.start);
+
+        let cursor = 0;
+        let result = '';
+
+        tokens.forEach((token) => {
+            if (cursor < token.start) {
+                result += escapeHtmlLite(normalized.slice(cursor, token.start));
+            }
+            const tokenText = normalized.slice(token.start, token.end);
+            result += `<span class="token-${token.type}">${escapeHtmlLite(tokenText)}</span>`;
+            cursor = token.end;
+        });
+
+        if (cursor < normalized.length) {
+            result += escapeHtmlLite(normalized.slice(cursor));
+        }
+
+        return result || '&nbsp;';
+    }
+
+    function updateCssHighlight() {
+        if (!cssHighlight || !cssEditor) return;
+        const content = cssEditor.value || '';
+        const highlighted = highlightCssTokens(content);
+        cssHighlight.innerHTML = highlighted || '&nbsp;';
+        cssHighlight.scrollTop = cssEditor.scrollTop;
+        cssHighlight.scrollLeft = cssEditor.scrollLeft;
+    }
+
+    function syncCssScroll() {
+        if (!cssHighlight || !cssEditor) return;
+        cssHighlight.scrollTop = cssEditor.scrollTop;
+        cssHighlight.scrollLeft = cssEditor.scrollLeft;
+    }
+
+    function cancelScheduledCssApply() {
+        if (cssState.applyTimer) {
+            clearTimeout(cssState.applyTimer);
+            cssState.applyTimer = null;
+        }
+    }
+
+    function scheduleCssAutoApply() {
+        if (!cssState.dirty) return;
+        cancelScheduledCssApply();
+        cssState.applyTimer = setTimeout(() => {
+            cssState.applyTimer = null;
+            applyCssChanges(false);
+        }, CSS_APPLY_DEBOUNCE);
+    }
+
+    function showCssMessage(type, text) {
+        if (!cssMessages) return;
+        if (!type || !text) {
+            cssMessages.innerHTML = '';
+            return;
+        }
+        cssMessages.innerHTML = `<div class="alert alert-${type} mb-2" role="status">${text}</div>`;
+    }
+
+    function showCssPanel(show) {
+        if (!cssPanel || !cssTab) return;
+        cssPanel.classList.toggle('d-none', !show);
+        cssTab.classList.toggle('active', show);
+        cssTab.setAttribute('aria-pressed', show ? 'true' : 'false');
+        cssState.visible = show;
+        if (show && cssEditor) {
+            updateCssHighlight();
+            cssEditor.focus();
+        }
+    }
+
+    function updateCssDirtyState() {
+        if (!cssEditor || !saveCssButton) return;
+        cssState.dirty = cssEditor.value !== cssState.lastSaved;
+        saveCssButton.disabled = !cssState.dirty;
+        if (cssState.dirty) {
+            showCssMessage('', '');
+        } else {
+            cancelScheduledCssApply();
+        }
+    }
+
+    async function loadCssContent() {
+        if (!StyleStorageRef || !StyleStorageRef.readText) return '';
+        try {
+            const text = await StyleStorageRef.readText('theme/style.css');
+            if (typeof text === 'string') {
+                return text;
+            }
+        } catch (err) {
+            console.warn('Unable to read style.css:', err);
+        }
+        try {
+            const legacy = await StyleStorageRef.readText('theme/content.css');
+            if (typeof legacy === 'string' && legacy) {
+                try {
+                    await StyleStorageRef.saveText('theme/style.css', legacy);
+                } catch (saveErr) {
+                    console.warn('Unable to normalize legacy content.css to style.css:', saveErr);
+                }
+                return legacy;
+            }
+        } catch (legacyErr) {
+            // Ignore if legacy file is missing.
+        }
+        return '';
+    }
+
+    function refreshActivePreview() {
+        const activeView = state.activeView;
+        if (!activeView || activeView === 'config') return;
+        setViewerSource(activeView);
+    }
+
+    async function applyCssChanges(showSuccessMessage = true) {
+        if (!cssEditor || !StyleStorageRef || !StyleStorageRef.saveText) return;
+        if (!cssState.dirty && cssEditor.value === cssState.lastSaved) return;
+
+        if (cssState.applying) {
+            cssState.applyQueued = true;
+            return;
+        }
+
+        cancelScheduledCssApply();
+        cssState.applying = true;
+        cssState.applyQueued = false;
+
+        const content = cssEditor.value;
+
+        try {
+            await StyleStorageRef.saveText('theme/style.css', content);
+            cssState.lastSaved = content;
+            updateCssDirtyState();
+            if (showSuccessMessage) {
+                showCssMessage('success', 'CSS applied to preview.');
+            }
+            refreshActivePreview();
+        } catch (err) {
+            console.error(err);
+            showCssMessage('danger', `Unable to save CSS: ${err && err.message ? err.message : err}`);
+        } finally {
+            cssState.applying = false;
+            if (cssState.applyQueued || cssEditor.value !== cssState.lastSaved) {
+                cssState.applyQueued = false;
+                scheduleCssAutoApply();
+            }
+        }
+    }
+
+    async function handleCssSubmit(event) {
+        event.preventDefault();
+        applyCssChanges(true);
+    }
+
+    async function reloadCss(showMessage = true) {
+        if (!cssEditor) return;
+        const content = await loadCssContent();
+        cssEditor.value = content;
+        cssState.lastSaved = content;
+        cssState.applyQueued = false;
+        cancelScheduledCssApply();
+        updateCssDirtyState();
+        updateCssHighlight();
+        syncCssScroll();
+        if (!showMessage) return;
+        if (content) {
+            showCssMessage('info', 'CSS reloaded from storage.');
+        } else {
+            showCssMessage('info', 'style.css not found. Start editing to create it.');
+        }
+    }
+
+    function handleCssReload(event) {
+        if (event) event.preventDefault();
+        reloadCss(true);
+    }
+
+    function handleCssDownload(event) {
+        if (event) event.preventDefault();
+        if (!cssEditor) return;
+        const blob = new Blob([cssEditor.value], { type: 'text/css' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'style.css';
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+        URL.revokeObjectURL(url);
+    }
+
+    async function setupCssSection() {
+        if (!cssForm || !cssEditor || !cssTab || !saveCssButton) return;
+
+        await reloadCss(false);
+        showCssPanel(false);
+        cssTab.disabled = false;
+        cssTab.setAttribute('aria-pressed', 'false');
+        cssTab.addEventListener('click', () => {
+            showCssPanel(!cssState.visible);
+        });
+
+        cssForm.addEventListener('submit', handleCssSubmit);
+        cssEditor.addEventListener('input', () => {
+            updateCssDirtyState();
+            updateCssHighlight();
+            scheduleCssAutoApply();
+        });
+        cssEditor.addEventListener('scroll', syncCssScroll);
+
+        if (cssReloadButton) {
+            cssReloadButton.addEventListener('click', handleCssReload);
+        }
+
+        if (cssDownloadButton) {
+            cssDownloadButton.addEventListener('click', handleCssDownload);
+        }
+    }
+
     function showConfigMessage(type, text) {
         if (!configMessages) return;
         configMessages.innerHTML = `<div class="alert alert-${type} mb-2" role="status">${text}</div>`;
@@ -65,11 +387,13 @@
         if (show) {
             previewPanel.classList.remove('d-none');
             configPanel.classList.add('d-none');
-            configTab.classList.remove('active');
-            configTab.setAttribute('aria-pressed', 'false');
+            deactivateConfigTab();
+            cssTab.disabled = false;
         } else {
             previewPanel.classList.add('d-none');
             configPanel.classList.remove('d-none');
+            showCssPanel(false);
+            cssTab.disabled = true;
         }
     }
 
@@ -368,6 +692,8 @@
         if (newWindowButton) newWindowButton.disabled = true;
         configPanel.classList.add('d-none');
         configTab.disabled = true;
+        showCssPanel(false);
+        cssTab.disabled = true;
     }
 
     async function init() {
@@ -386,6 +712,7 @@
 
         await setupConfigSection();
         configTab.disabled = false;
+        await setupCssSection();
 
         const availableViews = await prepareViews();
 

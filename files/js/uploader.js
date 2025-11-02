@@ -29,6 +29,14 @@
         {
             regex: /<link\s+rel=["']stylesheet["']\s+href=["']theme\/style\.css["']\s*\/?>/gi,
             replacement: '<script>document.write(\'<link rel="stylesheet" href="../../theme/style.css?v=\'+Date.now()+\'">\');</script>'
+        },
+        {
+            regex: /<link\s+rel=["']stylesheet["']\s+href=["']\.\.\/theme\/content\.css["']\s*\/?>/gi,
+            replacement: '<script>document.write(\'<link rel="stylesheet" href="../../../theme/style.css?v=\'+Date.now()+\'">\');</script>'
+        },
+        {
+            regex: /<link\s+rel=["']stylesheet["']\s+href=["']theme\/content\.css["']\s*\/?>/gi,
+            replacement: '<script>document.write(\'<link rel="stylesheet" href="../../theme/style.css?v=\'+Date.now()+\'">\');</script>'
         }
     ];
 
@@ -103,7 +111,13 @@
             if (relativePath.startsWith('__MACOSX')) return;
             if (relativePath.includes('..')) return;
 
-            const destPath = basePath + relativePath;
+            const isThemeAsset = relativePath.startsWith('theme/');
+            const themeRelativePath = isThemeAsset ? relativePath.slice('theme/'.length) : null;
+            const normalizedThemePath = themeRelativePath === 'content.css'
+                ? 'style.css'
+                : themeRelativePath;
+            const storageRelativePath = isThemeAsset ? `theme/${normalizedThemePath}` : relativePath;
+            const destPath = basePath + storageRelativePath;
             tasks.push((async () => {
                 const ext = getExtension(relativePath);
                 const fileName = relativePath.split('/').pop() || '';
@@ -126,13 +140,14 @@
                     await StyleStorage.saveBinary(destPath, binaryContent);
                 }
 
-                if (relativePath.startsWith('theme/')) {
+                if (isThemeAsset) {
                     if (shouldTreatAsText(ext)) {
                         const themeContent = textContent ?? await zipEntry.async('string');
-                        await StyleStorage.saveText(`theme/${relativePath.slice('theme/'.length)}`, themeContent);
+                        // Compat: los paquetes antiguos usan theme/content.css; lo renombramos a theme/style.css para el editor.
+                        await StyleStorage.saveText(`theme/${normalizedThemePath}`, themeContent);
                     } else {
                         const themeBinary = binaryContent ?? await zipEntry.async('uint8array');
-                        await StyleStorage.saveBinary(`theme/${relativePath.slice('theme/'.length)}`, themeBinary);
+                        await StyleStorage.saveBinary(`theme/${normalizedThemePath}`, themeBinary);
                     }
                 }
             })());
