@@ -30,7 +30,7 @@ if (isset($_POST['confirmDeleteAction'])) {
     deleteDirectory($contentsPath);
 
     // Redirect to index.php located at the same level
-    header("Location: ../index.php");
+    header("Location: ../");
     exit;
 }
 ?>
