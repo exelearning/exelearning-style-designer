@@ -53,7 +53,7 @@
                 $url .= $defaultIndexFile;
             ?>
             <?php if (file_exists($url)) { ?>
-            <iframe width="800" height="600" src="<?php echo $url; ?>?time=<?php echo time(); ?>" id="viewer"></iframe>
+            <iframe width="800" height="600" src="<?php echo $url; ?>?v=<?php echo date("YmdHis"); ?>" id="viewer"></iframe>
             <?php } else { ?>
             <div class="container p-4">
                 <h1 class="visually-hidden">Style Designer</h1>
