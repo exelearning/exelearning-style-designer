@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $zip->extractTo($targetFolder);
                         $zip->close();
                         // Do NOT delete fixture ZIPs
-                        if (strpos($tmpPath, '/fixtures/') === false && file_exists($tmpPath)) {
+                        if (strpos($tmpPath, 'fixtures/') === false && file_exists($tmpPath)) {
                             unlink($tmpPath);
                         }
                     } else {
