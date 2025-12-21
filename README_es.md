@@ -154,7 +154,7 @@ Si deseas empezar desde cero, ve a **Finish / Restart** y selecciona **Delete al
 ### 6. Recursos adicionales
 
 - Haz clic en **Example style (Estilo de ejemplo)** dentro de la aplicación para descargar un estilo de ejemplo.
-- Documentación oficial de estilos de eXeLearning (en inglés): https://github.com/exelearning/exelearning/blob/main/doc/development/styles.md
+- Documentación oficial de estilos de eXeLearning (en inglés): https://exelearning.github.io/exelearning/development/styles/
 
 ---
 

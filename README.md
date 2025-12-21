@@ -154,7 +154,7 @@ If you want to start from scratch, go to **Finish / Restart** and select **Delet
 ### 6. Additional Resources
 
 - Click **Example style** in the application to download an example style.
-- eXeLearning styles official documentation: https://github.com/exelearning/exelearning/blob/main/doc/development/styles.md
+- eXeLearning styles official documentation: https://exelearning.github.io/exelearning/development/styles/
 
 ---
 
