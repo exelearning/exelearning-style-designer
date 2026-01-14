@@ -26,7 +26,30 @@ No incluye las medidas de seguridad necesarias. Esta herramienta está destinada
 
 ## Instalación
 
-### 1. Docker
+### 1. Instalación directa en Apache
+
+Puedes ejecutar la aplicación directamente en un servidor Apache local:
+
+1. Asegúrate de tener **PHP 8+** y Apache instalados.
+2. Copia los archivos del proyecto al directorio de documentos de Apache (por ejemplo, `htdocs` o `www`).
+3. Asegúrate de que la carpeta `path-to-project/` sea accesible desde tu navegador.
+4. Si es necesario, ajusta la configuración de PHP para subir archivos grandes:
+
+```ini
+upload_max_filesize = 50M
+post_max_size = 50M
+memory_limit = 128M
+```
+
+5. Abre tu navegador y visita:
+
+```
+http://localhost/path-to-project/index.php
+```
+
+---
+
+### 2. Docker
 
 Esta es la forma más fácil de ejecutar la aplicación sin instalar PHP o Apache localmente.
 
@@ -46,29 +69,6 @@ http://localhost:8000/
 ```
 
 > Puedes cambiar el puerto en `docker-compose.yml` si es necesario.
-
----
-
-### 2. Instalación directa en Apache
-
-Si prefieres ejecutar la aplicación directamente en un servidor Apache local:
-
-1. Asegúrate de tener **PHP 8+** y Apache instalados.
-2. Copia los archivos del proyecto al directorio de documentos de Apache (por ejemplo, `htdocs` o `www`).
-3. Asegúrate de que la carpeta `path-to-project/` sea accesible desde tu navegador.
-4. Si es necesario, ajusta la configuración de PHP para subir archivos grandes:
-
-```ini
-upload_max_filesize = 50M
-post_max_size = 50M
-memory_limit = 128M
-```
-
-5. Abre tu navegador y visita:
-
-```
-http://localhost/path-to-project/index.php
-```
 
 ---
 
