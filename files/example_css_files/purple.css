@@ -33,7 +33,9 @@
 body.exe-export {
     background: #f9f9f9;
 }
-.exe-content {
+/* Set font size and font family in content and TinyMCE */
+.exe-content,
+body#tinymce {
     font-family: 'Open Sans', Arial, Verdana, Helvetica, sans-serif;
     line-height: 1.5em;
     font-size: 0.95em;
