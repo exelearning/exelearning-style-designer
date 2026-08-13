@@ -287,6 +287,31 @@ fights — if you add one without that comment, you have added a defect.
 **The style files ship to third parties as they are.** No rationale, no history, no
 instructions in the comments. Your reasoning goes in the report, not in the file.
 
+**Never annotate a fix with the reason it was needed.** This is the rule most often broken,
+because a contrast fix feels like it needs justifying. It does not — not in the file.
+Contrast ratios, WCAG clause numbers, thresholds, surface colours, measurements and "this
+used to be X" are all report material. The comment below is exactly what not to write:
+
+```css
+/* Wrong — the surface, the number and the diagnosis all belong in the report */
+/* The current tab is painted #efefef, where the link colour drops below 4.5:1 */
+.exe-content .fx-tabs a {
+    color: #a94f2d;
+}
+
+/* Right */
+.exe-content .fx-tabs a {
+    color: #a94f2d;
+}
+```
+
+Keep only two kinds of comment: a short section label (`/* Teacher mode */`, `/* Focus */`),
+and the one-line note §1 requires beside an `!important`, naming the inline style it fights.
+Everything else: **no comment, no detail**. When in doubt, write none.
+
+Applies to the whole pass, not just new rules — if you leave a comment of this kind behind
+after editing a declaration, remove it.
+
 Re-verify after applying. A fix you did not re-check is a claim, not a result.
 
 ## Phase 8 — Report

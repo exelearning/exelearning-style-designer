@@ -37,12 +37,16 @@ Three more that matter in practice:
 
 ### What a comment is for
 
-**The value that is not obvious**, not the mechanism.
+**Almost nothing.** A comment earns its place only as a short section label, or as the
+one-line note beside an `!important` naming the inline style it fights (§9).
+
+**When a value is not obvious, explain it on screen, not in the file.** One brief line in
+your reply — the ratio you landed on, the surface you measured against, why this value and
+not the neighbouring one — and nothing in the stylesheet. Whoever receives the shipped
+style gets the rule; whoever is directing the work gets the reasoning, while they are still
+directing it.
 
 ```css
-/* Good */
-color: var(--exe-orange-hover); /* --exe-orange is only 4.29:1 on this surface */
-
 /* Bad: explains what the reader can already see, and tells a story */
 /* Links the author writes into the footer. They used to take --exe-ink, the heading
    color, so they read as bold text rather than as links, and no hover rule could
