@@ -198,6 +198,15 @@ Only if the style has one. Which implementation decides the checks.
 - The toggle must have an accessible name and a state (`aria-pressed`), and must be
   keyboard-operable.
 - With `localStorage` unavailable the toggle should be **absent**, not present-and-broken.
+- **Dark mode prints.** Browsers apply `filter` when printing, so a reader who prints with
+  dark mode on gets an inverted page — a black sheet. `@media print` must switch it off.
+  Nothing warns you: the screen looks right.
+- **Switching it off means every filter, not just the one on `html`.** A filter-based dark
+  mode also carries re-inversions (`:is(img, video, iframe)`, a licence badge, a top bar).
+  Those exist to *cancel* the global filter. Reset only the global one and they stop
+  cancelling and start inverting for real: the photographs and the logo come out negative,
+  which is worse than what you set out to fix. List every re-inverted selector in the print
+  reset.
 
 ---
 
@@ -235,6 +244,14 @@ bar, a navigation menu and a logo band.
   nicety. Check that fixed bars, togglers and the page counter are hidden, that link URLs
   are exposed, that margins reset, and that nothing forces a background the printer must
   render.
+- **`@media print` adds no specificity, so its position in the file decides whether it
+  works.** A print rule loses to any screen rule that is more specific, and to an equally
+  specific one written later. Both are common: a `.exe-content` print reset beaten by a
+  `.exe-export .exe-content` screen rule, or a dark-mode print reset placed above the
+  dark-mode block it is meant to undo. Read every print declaration against what already
+  matches the same element — an inert print rule looks identical to a correct one.
+  A style may legitimately need **more than one `@media print` block** for this reason;
+  that is not duplication to clean up.
 - **SCORM/IMS** live in an LMS iframe. The host brings its own surroundings and usually its
   own dark mode. `localStorage` is third-party storage there.
 - `<html>` carries `id="exe-index"` on the index page — useful for targeting the home page,

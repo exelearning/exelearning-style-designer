@@ -265,8 +265,20 @@ formats:
    measures the **real** surface, which is the whole point (§8, §13).
 5. Resize through the Phase 5 widths and look. Screenshot the failures.
 6. If the style has dark mode: repeat 3–5 with it on. For a filter-based dark mode, check
-   hairlines and icons specifically — they are the usual casualty (§12).
-7. Re-run the probe after every fix. A contrast fix on one surface routinely breaks another.
+   hairlines and icons specifically — they are the usual casualty (§12). **Measuring colour
+   through a filter needs a filter**: the CSSOM gives you source values, not what the reader
+   sees. Push each one through a canvas carrying the same filter — `ctx.filter =
+   'invert(1) hue-rotate(180deg)'`, fill, read the pixel back — which is the same
+   implementation CSS uses. Count the filters on the text and on the element that paints the
+   background **separately**: inside a re-inverted island the text is filtered twice while an
+   ancestor's background is filtered once, and treating both the same invents failures that
+   are not there.
+7. **Print.** There is no preview to open, so make the print rules live instead: walk
+   `document.styleSheets`, find every `CSSMediaRule` whose `conditionText` is `print`, set
+   `media.mediaText = 'all'`, measure, then set it back. Check it with dark mode **on** as
+   well — that combination is where the damage is (§6 of this catalogue). Do not stop at the
+   first print block; a style may have several.
+8. Re-run the probe after every fix. A contrast fix on one surface routinely breaks another.
 
 If permission is refused, state in the report exactly which findings are unverified
 inferences rather than measurements.
