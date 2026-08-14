@@ -206,7 +206,11 @@ omission as a defect, not a nicety.
    third-party? Every third-party font, icon set, image, sprite and logo must appear in
    `description` **with its licence**. Missing credits are the single most common finding
    here, and logos are the most commonly missed: a brand mark dropped into `img/` rarely
-   gets written down.
+   gets written down. **Stock assets count too.** `img/licenses.gif` — the Creative Commons
+   badge sprite behind `#packageLicense` — ships with nearly every style and reads as
+   platform plumbing, but it is a Creative Commons trademark and needs its own line saying
+   it is not under the style's licence. Check it in every style; it is the credit most
+   often absent.
 3. **Trademarks and logos** not covered by the style's own licence must say so explicitly
    *and should be removable* — the usual mechanism is a flag in `style.js` that drops the
    element (§6). If a logo is present with no such flag, report it and offer to add one
