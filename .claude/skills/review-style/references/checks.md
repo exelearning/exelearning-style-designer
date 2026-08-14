@@ -142,7 +142,9 @@ The table in §8 is the list. The test is the same for each: **does the style lo
 with the element and without it?**
 
 - `.package-subtitle` absent → does the header keep its padding, or collapse?
-- `.page-counter` absent → does whatever was positioned around it reflow?
+- `.page-counter` absent → does whatever was positioned around it reflow? **The single-page
+  format never carries one** — the whole project is one document, so there is nothing to
+  count. Do not report it as unverified there, and do not write rules that expect it.
 - `#teacher-mode-toggler-wrapper` — injected by the app, never in the HTML. A rule like
   `body:has(#teacher-mode-toggler-wrapper) .package-title { padding-right: 100px }` is the
   correct pattern. A bare `padding-right` on `.package-title` is not.

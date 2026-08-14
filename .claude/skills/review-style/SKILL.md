@@ -201,6 +201,8 @@ omission as a defect, not a nicety.
 1. **Required fields present and well-formed**: `name` (folder id — no spaces, no accents,
    no special characters), `title`, `version`, `compatibility`, `author`, `license`,
    `license-url`, `description`. The file must be valid XML and UTF-8.
+   **`<downloadable>` is obsolete** — eXeLearning no longer reads it. Remove it where you
+   find it; it is the one deletion in this file you do not need to ask about.
 2. **Inventory every asset, then match it against the text.** List `theme/fonts/*`,
    `theme/icons/*`, `theme/img/*`. For each, decide: authored by the style's author, or
    third-party? Every third-party font, icon set, image, sprite and logo must appear in
