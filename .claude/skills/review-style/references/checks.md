@@ -264,7 +264,58 @@ bar, a navigation menu and a logo band.
 
 ---
 
-## 9. Things that look like defects and are not
+## 9. Source code blocks
+
+Two unrelated renderings, and the style must leave both usable. `code-*.html` in the web
+export exercises them.
+
+| Markup | Comes from | Surface |
+| --- | --- | --- |
+| `.pre-code > div > pre > code` | `base.css` | `#112c4a`, text `#e7ecf1`, `font-size: 12px` |
+| `.highlighted-code.language-*` | Prism (`libs/exe_highlighter/`) | `#f5f2f0`, text `#000` |
+| `.highlighted-code.code-style-2` | Prism, Okaidia | `#272822`, text `#f8f8f2` |
+
+`language-*` and `line-numbers` sit on the **outer div**, not on `<pre>`. Prism copies them
+onto `pre`/`code` at runtime, so every `pre[class*=language-]` rule only applies after the
+JS has run — reading the HTML will not show you the element you are styling (§9).
+
+1. **Monospace must survive.** A style setting `font-family` on `.exe-content` does *not*
+   reach `pre`/`code`: the UA and Bootstrap rules match those elements directly and beat
+   inheritance. Verify rather than assume, and verify it **with the eXe atools fonts on**
+   too — `body.exe-atools-od`, `-ah` and `-mo` each set a family on `.exe-content`, and a
+   reader may have any of them active. A style that sets `font-family` on `pre`, `code` or
+   `*` breaks alignment in every code block; that is a defect.
+2. **The two blocks must compute the same `font-size`.** This is the check that catches
+   real breakage. `base.css` pins `.pre-code` to an absolute `12px` (Bootstrap's `pre
+   { font-size: 87.5% }` then drops it to **10.5px**), while Prism uses a relative
+   `font-size: 1em`. So the moment a style scales prose — a presentation mode with
+   `.idevice_node.text { font-size: 1.2em }` is the usual case — the highlighted block
+   grows and the plain one does not, and the same code appears at two sizes on one page.
+   Measure both; do not eyeball one.
+3. **Line numbers desync silently.** `.line-numbers-rows` is absolutely positioned and
+   inherits `line-height` from `pre`. Setting `line-height` or `font-size` on `code` alone,
+   or on one of the two and not the other, slides the numbers out of register a little more
+   with every line. Compare the computed `line-height` of `pre` and of `.line-numbers-rows`.
+4. **`white-space: pre` is load-bearing.** A global `word-break`, `overflow-wrap` or
+   `white-space: pre-wrap` reflows code and breaks both the numbering and the indentation.
+   Long lines are meant to scroll inside `pre` (`overflow: auto`), which is the correct
+   answer to WCAG 1.4.10 for code — a horizontal scrollbar on the block is not a finding, a
+   horizontal scrollbar on the **document** is.
+5. **`tab-size`.** Prism sets `4`; the plain block inherits the browser default `8`. Same
+   file, two indentations.
+6. **Print.** Both dark surfaces carry near-white text, and browsers drop backgrounds unless
+   asked. Printed, `#e7ecf1` and `#f8f8f2` land on white paper and the code vanishes. Check
+   it by flipping the print blocks to `all` (Phase 6.7). `print-color-adjust: exact` fixes
+   it without touching a single colour.
+7. **Prism's palette is not the style's.** Several default-theme tokens fail AA on `#f5f2f0`
+   — punctuation and line numbers `#999999` at 2.56:1, `string` 3.08:1, `function` 3.59:1,
+   `comment` 3.64:1, `keyword` 4.47:1. They ship with eXeLearning, the dark `code-style-2`
+   theme passes, and repainting them is a change to the general presentation of every code
+   block. **Report the numbers, do not repaint them** unless the user asks.
+
+---
+
+## 10. Things that look like defects and are not
 
 Check before reporting. Reporting a deliberate decision as a bug wastes the user's time and
 makes the real findings harder to see.

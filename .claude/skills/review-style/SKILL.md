@@ -83,7 +83,7 @@ each optional element in §8 and record present / absent:
 `.package-subtitle` · `.page-counter` · `#teacher-mode-toggler-wrapper` · `#packageLicense`
 · `#siteUserFooter` · `.box-toggle` · `.box-icon` · `.box.no-header` · `#siteNav` ·
 `.nav-buttons` · `#siteLogos` · `.exe-attachment-link` · `.exe-fx` · `.exe-dl` ·
-`.exe-block-*`
+`.exe-block-*` · `.pre-code` · `.highlighted-code`
 
 **An element absent from these exports is not absent from the world.** Some are injected at
 runtime (`#teacher-mode-toggler-wrapper`), some depend on export preferences, some on what
@@ -191,7 +191,12 @@ The font has to carry the text, not just look right in a heading.
 6. **Legibility.** `line-height` under 1.4 on body prose, and any body `font-size` that
    computes below 16px, fail comfortably-readable expectations and interact with WCAG 1.4.4
    (text must survive 200% zoom) and 1.4.12 (text spacing overrides must not clip).
-7. **Licence.** Every font file must be credited in `config.xml` — Phase 4 checks it.
+7. **Source code.** Prose typography is not the only typography on the page: `.pre-code` and
+   `.highlighted-code` need a monospace family, an untouched `white-space: pre` and line
+   numbers that stay in register, and the two of them must come out the same size as each
+   other. §9 of the catalogue is the checklist — run it whenever the content has a code
+   block, and run it again after any change to font size or scaling.
+8. **Licence.** Every font file must be credited in `config.xml` — Phase 4 checks it.
 
 ## Phase 4 — `config.xml`: legal and authorship
 
