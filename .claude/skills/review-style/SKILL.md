@@ -303,7 +303,7 @@ dead code (only what the user approved) → contrast and focus → responsive �
 `config.xml`.
 
 House style is not optional (§1): English comments, one line where possible, 4-space
-indent, one declaration per line, six-digit lowercase hex or a `:root` variable, single
+indent, one declaration per line, lowercase hex (three or six digits) or a `:root` variable, single
 quotes in JS. Every `!important` carries a one-line comment naming the inline style it
 fights — if you add one without that comment, you have added a defect.
 

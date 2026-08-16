@@ -21,7 +21,7 @@ deliberate decision. **A style is allowed to be unusual. It is not allowed to be
 | Selectors the compatibility target may not support | `:has()`, `:is()`, `@container`. Present in this style already, so the target is modern — but flag a new one |
 | Duplicated selector blocks | Later wins entirely. Check whether the earlier one has a reason to exist |
 | `!important` with no comment naming the inline style it fights | §9. Missing comment = defect |
-| Colour format | Six-digit lowercase hex or a `:root` var (§1). `#FFF`, `#DDEBF8`, `red`, `rgb(…)` for opaque colours are all house-style violations |
+| Colour format | Lowercase hex, three or six digits, or a `:root` var (§1). A three-digit hex is fine as long as it is a valid one (`#fff`, `#c00`); `#FFF`, `#DDEBF8`, `red`, `rgb(…)` for opaque colours are all house-style violations |
 | Indentation, one declaration per line, 4 spaces | §1 |
 
 **Overridden declarations inside one block** are the most common dead code in a style:

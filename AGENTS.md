@@ -21,7 +21,7 @@ you are the agent, everything here is binding.
 | Code comments | **English**, always, in every `.css` and `.js` |
 | Comment length | **One line whenever possible.** Two or three only when a value would be a mystery without them |
 | Indentation | **4 spaces**, never tabs. One declaration per line |
-| Colours | Six-digit lowercase hex, or a `:root` variable |
+| Colours | Lowercase hex, three or six digits, or a `:root` variable |
 | Strings in JS | Single quotes |
 | Accessibility | **WCAG 2.2 level AA** (§12) |
 
