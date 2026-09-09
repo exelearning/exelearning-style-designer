@@ -160,6 +160,11 @@ one by one, so a newly injected control is easy to leave off the list. The sympt
 label rendered on top of an icon button, which the browser makes obvious and static reading
 does not — flag it as a candidate and confirm it in Phase 6.
 
+**`sr-av` is the exception**: the export's `content/css/base.css` defines it unscoped, next
+to `.js .js-sr-av`, `.exe-hidden-accessible` and `.js .exe-tooltip-text`, and that sheet is
+always loaded. A style that clips an injected label with `class="sr-av"` and defines nothing
+itself is correct — do not report it. The check above is for the style's own classes.
+
 ---
 
 ## 4. Accessibility, at the level agreed in Phase 0
