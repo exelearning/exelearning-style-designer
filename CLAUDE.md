@@ -58,11 +58,11 @@ Three files, and none of them stands alone — `SKILL.md` loads the other two by
 Neither `SKILL.md` nor `checks.md` names a specific style, and they should stay that way.
 Findings about a particular style go in `notes/<style>.md`, which is not versioned.
 
-## Target version: eXeLearning 4.0.4
+## Target version: eXeLearning 4.0.5
 
-The tool is released as **4.0.4**, matching the eXeLearning it targets, and the READMEs say
+The tool is released as **4.0.5**, matching the eXeLearning it targets, and the READMEs say
 plainly that content exported by earlier versions is **not supported**. The previews are only
-meaningful against 4.0.4 markup: the effects components read a focus colour from the style,
+meaningful against 4.0.5 markup: the effects components read a focus colour from the style,
 the teacher-mode switch exists, General Icons are Material Symbols, and navigation goes
 through the core's URL helper. None of that is in an older export.
 
@@ -72,7 +72,7 @@ HTML are now literals. **Do not reintroduce it.** A 3.x export loaded now simply
 up, which is the intended behaviour.
 
 The bundled `files/fixtures/*.zip` report `exe_version 0.0.0-alpha`. That is the author's
-local build carrying the changes that ship in 4.0.4, **not** an older export: it is the
+local build carrying the changes that ship in 4.0.5, **not** an older export: it is the
 right fixture, and the version string is not a defect.
 
 ## Running it

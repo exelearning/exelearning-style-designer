@@ -2,11 +2,11 @@
 
 # eXeLearning Style Designer
 
-**Version:** 4.0.4 · **License:** AGPL
+**Version:** 4.0.5 · **License:** AGPL
 
 ## Description
 
-eXeLearning Style Designer is a tool designed to facilitate the creation of custom styles for **eXeLearning 4.0.4**.
+eXeLearning Style Designer is a tool designed to facilitate the creation of custom styles for **eXeLearning 4.0.5**.
 
 With this tool, you can easily edit and customize the look and feel of your eXeLearning projects by creating new styles and packaging them for distribution.
 
@@ -22,11 +22,11 @@ This tool is **not intended for non-technical users**. It is designed for web de
 
 It does not include the necessary security measures. This tool is intended solely for designers to simplify the creation of styles for eXeLearning 4.
 
-⚠️ **Version compatibility: eXeLearning 4.0.4.**
+⚠️ **Version compatibility: eXeLearning 4.0.5.**
 
-This release is built for **eXeLearning 4.0.4**, and that is the version it is recommended for. The three exports you load must be produced by 4.0.4 — **content exported with an earlier version is not supported**.
+This release is built for **eXeLearning 4.0.5**, and that is the version it is recommended for. The three exports you load must be produced by 4.0.5 — **content exported with an earlier version is not supported**.
 
-The reason is that the Designer previews your style against the real exported markup, and 4.0.4 changed it: the focus colour the effects components read from the style, the teacher-mode switch, the General Icons drawn as Material Symbols, and the URL helper the navigation uses. A style checked against an older export can look finished and still be wrong in 4.0.4.
+The reason is that the Designer previews your style against the real exported markup, and 4.0.5 changed it: the focus colour the effects components read from the style, the teacher-mode switch, the General Icons drawn as Material Symbols, and the URL helper the navigation uses. A style checked against an older export can look finished and still be wrong in 4.0.5.
 
 ---
 
@@ -93,7 +93,7 @@ You will see two options:
   - A SCORM 1.2 package
 - **Use the sample contents** (the easiest way to start)
 
-If you choose to upload your own exports, they must come from **eXeLearning 4.0.4** (see the compatibility notice above), and you should make sure **all export preferences** (page counter, search box, etc.) are enabled. This way, your exports will include all optional elements, allowing you to ensure your style is fully compatible with them. You should also include all kinds of box combinations: with and without icon, with and without title, without the minimize button, etc. This will let you verify that your style works properly in all cases.
+If you choose to upload your own exports, they must come from **eXeLearning 4.0.5** (see the compatibility notice above), and you should make sure **all export preferences** (page counter, search box, etc.) are enabled. This way, your exports will include all optional elements, allowing you to ensure your style is fully compatible with them. You should also include all kinds of box combinations: with and without icon, with and without title, without the minimize button, etc. This will let you verify that your style works properly in all cases.
 
 ---
 

@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Working rules for building an **eXeLearning style** with the Style Designer and an AI
-coding agent. Target: **eXeLearning 4.0.4** (§2).
+coding agent. Target: **eXeLearning 4.0.5** (§2).
 
 Read this before editing anything. It is the only place where the rules live: **the style
 files ship to third parties as they are**, so they must carry no instructions, no
@@ -93,9 +93,9 @@ contents/scorm/  <- SCORM 1.2 export      preview target
 Both folders are recreated from scratch on every upload and are **not** part of the
 repository.
 
-⚠️ **The exports must come from eXeLearning 4.0.4.** Earlier versions are not supported, and
+⚠️ **The exports must come from eXeLearning 4.0.5.** Earlier versions are not supported, and
 the failure is silent rather than loud: the markup you are styling against simply lacks
-things 4.0.4 has — `--exe-fx-focus-color` read by the effects components (§11), the
+things 4.0.5 has — `--exe-fx-focus-color` read by the effects components (§11), the
 teacher-mode switch (§8), General Icons as Material Symbols, and `$exeExport.setUrlParam`
 (§9). A style verified against an older export can look finished and still be wrong. If a
 check below reports a component as absent, confirm the export's version before concluding
