@@ -1,5 +1,5 @@
 /*!
- * eXeLearning v4.0.5 Example Style File
+ * eXeLearning v4.0.6 Example Style File
  * ----------------------
  * Author: Ignacio Gros
  * Project: eXeLearning.net
@@ -661,7 +661,8 @@ body.exe-web-site {
     html.exe-dark-mode .exe-content .page-header {
         background: var(--c-band-page-dark);
     }
-    html.exe-dark-mode #made-with-eXe a {
+    html.exe-dark-mode #made-with-eXe a,
+    html.exe-dark-mode #exe-presentation-toggler {
         filter: invert(100%) hue-rotate(180deg);
         opacity: 1;
     }
