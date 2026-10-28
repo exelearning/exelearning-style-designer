@@ -90,12 +90,19 @@ your style.css`. Yours is last, so equal specificity wins.
 | Markup built by the JS | The page must stay readable with JS off (§9). Check that no content is *only* reachable through injected markup |
 | Text read with `.text()` and concatenated into HTML | ⚠️ **A functional break, not only a security one.** `.text()` decodes the entities the exporter escaped, so `'<span>' + a.text() + '</span>'` turns a page titled `If a<b then` into "If a" plus a fake `<b>` that swallows the rest. Breadcrumbs are the usual place (page titles from `#siteNav a`, `.page-title`). Build nodes instead: `$('<a></a>').attr('href', …).attr('title', text).append($('<span></span>').text(text))`. Test it with a title containing `a<b` and `&`; with normal titles the output must stay identical. _PR exelearning/exelearning#2578_ |
 | A click handler that hijacks link navigation | A handler that calls `preventDefault()` and opens the link itself (a mobile menu that animates before navigating, for example) must let modified clicks through. Check `e.ctrlKey \|\| e.metaKey \|\| e.shiftKey \|\| e.altKey \|\| e.button !== 0` and return before `preventDefault()`, or Ctrl/Cmd+click and middle-click stop opening a new tab. It is minor: report it as a suggestion, not a defect. _PR exelearning/exelearning#2578_ |
+| Keys bound on `document` | ⚠️ **Presentation mode owns `←`, `→`, `PageUp`, `PageDown`, `M` and `T`** on the website (`exe_export.js`, `presentationMode.handleKeydown`). A style that binds any of them on `document` fights the runtime; one that calls `preventDefault()` on them silently disables it, because the runtime yields to `defaultPrevented`. Bind on the style's own element instead. _PR exelearning/exelearning#2020_ |
+| `#siteNavToggler` state set late | The runtime reads the menu state from **`aria-expanded` on `#siteNavToggler`**, right after the style's click handler, to collapse the menu and to carry `nav=true\|false`. The handler must set it **synchronously**, in both branches — not in an animation callback or a `setTimeout`. If the style names its menu toggler differently, presentation mode cannot drive the menu at all: report it |
+| Links built from a menu `href` at `init()` | The runtime adds `exe-presentation` and `nav` to `#siteNav a` and `.nav-buttons a` **after** the style's `init()`. A style that copies those hrefs into its own links (breadcrumbs, a title link, a mobile menu) at load time loses them: reread `getAttribute('href')` on `mousedown`/`click` |
+| Prev/next links renamed or rebuilt | The runtime changes page by clicking `a.nav-button-left` / `a.nav-button-right`. A style that replaces them with its own markup leaves the arrow keys doing nothing |
 | Quote style | Single quotes (§1) |
 
 **Query parameters are a shared channel, and hand-rolled URL surgery breaks it.** A style
 that carries its own state across navigation — `nav=false` for a collapsed menu is the
 usual one — rewrites links the application generated. Through those links also travel
-`exe-teacher`, `q`, `print` and the four xAPI credentials. The three broken patterns, all
+`exe-teacher`, `exe-presentation`, `q`, `print` and the four xAPI credentials. While
+presenting, the runtime also writes **`nav=true`**: detection must stay `=== 'false'`, and a
+style that removes `nav` when the menu reopens is fine, because the runtime writes its own
+value back right after the style's handler. The three broken patterns, all
 of which survive a casual test because the sample content has no other parameters:
 
 ```js
@@ -262,6 +269,13 @@ with the element and without it?**
   markup.
 - `#siteNav`, `.nav-buttons`, `#siteLogos` — website only. Anything positioned relative to
   them needs a fallback in the other two formats.
+- `#exe-presentation-toggler` — website only, and only with `?exe-presentation=1` (on) or
+  `=0` (control shown, mode off) in the URL; the Style Designer's **Presentation mode**
+  switch adds it. A fixed badge at the bottom right, 40px to the left of `#made-with-eXe`,
+  appended to `<body>` and styled by `base.css`. Check that nothing the style fixes to the
+  bottom of the viewport covers it, and that the menu collapses and reopens with `M` at
+  every Phase 5 width — at narrow widths the runtime scrolls to the top and clicks the
+  style's toggler a second time. `html.mode-presentation` is the hook while it is on.
 - `#siteLogos` in particular: styles that ship a logo band and styles that do not are both
   normal. If the CSS reserves space for it unconditionally, single-page and SCORM get a gap.
 - `.exe-fx`, `.exe-dl`, `.exe-block-*`, `.exe-attachment-link` — only if the author used
@@ -287,6 +301,10 @@ Only if the style has one. Which implementation decides the checks.
 - Images, photographs and logos shift colour. `:is(img, video, iframe)` re-inversion is the
   standard patch — check the exception list covers every image-bearing element, including
   CSS `background-image` icons, which the `img` selector does **not** reach.
+- **The application's badges are inverted too.** `#made-with-eXe a` is the usual
+  re-inverted one; since eXeLearning 4.0.6, `#exe-presentation-toggler` belongs in the same
+  rule (`doc/development/styles.md` upstream), or it shows up as a light chip — and, when the
+  mode is on, as a white one. Check it with `?exe-presentation=1`.
 - A `filter` applies to the whole subtree and cannot be undone by a child.
 - Do not rely on `popover`/top-layer to escape an ancestor filter.
 

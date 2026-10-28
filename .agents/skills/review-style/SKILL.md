@@ -235,8 +235,8 @@ Delete only what you can prove is inert *in every format and every state*:
 - A vendor prefix for a browser the compatibility target excludes.
 
 Not proof: "I did not see it used". The DOM you style is not the DOM in the file (§9), the
-three formats differ (§7), and teacher mode, dark mode, `?nav=false` and the minimised box
-state all produce markup you will not find by grepping one page.
+three formats differ (§7), and teacher mode, presentation mode, dark mode, `?nav=false` and
+the minimised box state all produce markup you will not find by grepping one page.
 
 ## Phase 3 — Typography
 
@@ -414,6 +414,10 @@ formats:
    background **separately**: inside a re-inverted island the text is filtered twice while an
    ancestor's background is filtered once, and treating both the same invents failures that
    are not there.
+   **Presentation mode**, on the website only: load it with `?exe-presentation=1` (light and
+   dark) and check the `#exe-presentation-toggler` badge, then `M` to collapse and reopen the
+   menu and `←`/`→` to change page at a wide and a narrow width. `references/checks.md` §3
+   and §5 have what the runtime expects from the style.
 7. **Print.** There is no preview to open, so make the print rules live instead: walk
    `document.styleSheets`, find every `CSSMediaRule` whose `conditionText` is `print`, set
    `media.mediaText = 'all'`, measure, then set it back. Check it with dark mode **on** as

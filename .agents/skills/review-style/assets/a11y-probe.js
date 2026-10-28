@@ -172,7 +172,8 @@
         '#packageLicense', '#siteUserFooter', '.box-toggle', '.box-icon',
         '.box.no-header', '#siteNav', '.nav-buttons', '#siteLogos',
         '.exe-attachment-link', '.exe-fx', '.exe-dl', '[class*="exe-block-"]',
-        '.box', '#exe-client-search', '#darkModeToggler', '#made-with-eXe'
+        '.box', '#exe-client-search', '#darkModeToggler', '#made-with-eXe',
+        '#exe-presentation-toggler'
     ];
     var presence = {};
     optional.forEach(function (sel) {
