@@ -369,11 +369,14 @@ app adds a `#exe-presentation-toggler` badge next to `#made-with-eXe`, puts
   handler. Set it synchronously, in every branch.
 - It changes page by clicking **`a.nav-button-left`** and **`a.nav-button-right`**.
 - While presenting it writes `nav=true` or `nav=false` into the URL and the links. Keep
-  testing `=== 'false'`, as above.
+  testing `=== 'false'`, as above, and do not strip a `nav=true` you did not add.
 - It adds its parameters to `#siteNav a` and `.nav-buttons a` **after** your `init()`. If
   you copy those hrefs into links of your own, reread them on click.
-- **Never bind those keys on `document`.** Calling `preventDefault()` on one disables the
-  mode for that key.
+- **Never handle those keys unconditionally.** If the style does use one, it must call
+  `preventDefault()` when it does, from a handler that runs first (on its own element, or on
+  `document` before the mode starts; `window` is too late): the mode then leaves that key
+  press alone. Without it, both act: an arrow changes the page twice, and `M` opens and
+  closes the menu in one press.
 
 ### If your own `style.js` runs at parse time
 

@@ -27,12 +27,24 @@ iframe {
 #presentationModeSwitch {
     display: inline-block;
     margin: 0 0 0 1em;
-    color: #FFF;
+    color: #ADB5BD;
     font-size: .875rem;
     vertical-align: middle;
 }
-#presentationModeSwitch .form-check-input:disabled ~ .form-check-label {
-    opacity: .5;
+#presentationMode {
+    background-color: #ADB5BD;
+    border-color: #ADB5BD;
+}
+#presentationMode:checked {
+    background-color: #6C757D;
+    border-color: #6C757D;
+}
+#presentationMode:focus {
+    border-color: #ADB5BD;
+    box-shadow: 0 0 0 .25rem rgba(173, 181, 189, .25);
+}
+#presentationMode:not(:checked) {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
 }
 #actionsPanel {
     float: right;

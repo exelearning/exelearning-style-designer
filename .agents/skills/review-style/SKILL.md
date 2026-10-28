@@ -416,8 +416,8 @@ formats:
    are not there.
    **Presentation mode**, on the website only: load it with `?exe-presentation=1` (light and
    dark) and check the `#exe-presentation-toggler` badge, then `M` to collapse and reopen the
-   menu and `←`/`→` to change page at a wide and a narrow width. `references/checks.md` §3
-   and §5 have what the runtime expects from the style.
+   menu and `←`/`→` to change page at a wide and a narrow width. `references/checks.md` §3,
+   §5 and §6 have what the runtime expects from the style.
 7. **Print.** There is no preview to open, so make the print rules live instead: walk
    `document.styleSheets`, find every `CSSMediaRule` whose `conditionText` is `print`, set
    `media.mediaText = 'all'`, measure, then set it back. Check it with dark mode **on** as
