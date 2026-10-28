@@ -58,21 +58,23 @@ Three files, and none of them stands alone — `SKILL.md` loads the other two by
 Neither `SKILL.md` nor `checks.md` names a specific style, and they should stay that way.
 Findings about a particular style go in `notes/<style>.md`, which is not versioned.
 
-## Target version: eXeLearning 4.0.5
+## Target version: eXeLearning 4.0.6
 
-The tool is released as **4.0.5**, matching the eXeLearning it targets, and the READMEs say
+The tool is released as **4.0.6**, matching the eXeLearning it targets, and the READMEs say
 plainly that content exported by earlier versions is **not supported**. The previews are only
-meaningful against 4.0.5 markup: the effects components read a focus colour from the style,
-the teacher-mode switch exists, General Icons are Material Symbols, and navigation goes
-through the core's URL helper. None of that is in an older export.
+meaningful against 4.0.6 markup: the effects components read a focus colour from the style,
+the teacher-mode switch exists, General Icons are Material Symbols, navigation goes
+through the core's URL helper, and the website has a presentation mode
+(exelearning/exelearning#2020) that clicks the style's own `#siteNavToggler` and prev/next
+links. None of that is in an older export.
 
-The eXeLearning **3** compatibility path was removed for this release: `upload/index.php` no
+The eXeLearning **3** compatibility path was removed in 4.0.5: `upload/index.php` no
 longer renames `default.js` / `content.css`, and the four strings it rewrites in the exported
 HTML are now literals. **Do not reintroduce it.** A 3.x export loaded now simply fails to wire
 up, which is the intended behaviour.
 
 The bundled `files/fixtures/*.zip` report `exe_version 0.0.0-alpha`. That is the author's
-local build carrying the changes that ship in 4.0.5, **not** an older export: it is the
+local build carrying the changes that ship in 4.0.6, **not** an older export: it is the
 right fixture, and the version string is not a defect.
 
 ## Running it
@@ -98,7 +100,8 @@ Everything the application does happens in three files.
 
 **`index.php`** — the previewer. Renders a single `<iframe>` and three buttons that swap
 its `src` between `contents/web`, `contents/page` and `contents/scorm`, appending a
-timestamp as a cache buster. If `contents/` does not exist it shows the Start link
+timestamp as a cache buster, plus `&exe-presentation=1` on the website when the
+**Presentation mode** switch is on (it is disabled for the other two). If `contents/` does not exist it shows the Start link
 instead. `$defaultIndexFile` at the top switches the entry file for all three formats.
 
 **`upload/index.php`** — the importer, and the only non-trivial logic in the project. It

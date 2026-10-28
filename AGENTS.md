@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Working rules for building an **eXeLearning style** with the Style Designer and an AI
-coding agent. Target: **eXeLearning 4.0.5** (§2).
+coding agent. Target: **eXeLearning 4.0.6** (§2).
 
 Read this before editing anything. It is the only place where the rules live: **the style
 files ship to third parties as they are**, so they must carry no instructions, no
@@ -93,11 +93,11 @@ contents/scorm/  <- SCORM 1.2 export      preview target
 Both folders are recreated from scratch on every upload and are **not** part of the
 repository.
 
-⚠️ **The exports must come from eXeLearning 4.0.5.** Earlier versions are not supported, and
+⚠️ **The exports must come from eXeLearning 4.0.6.** Earlier versions are not supported, and
 the failure is silent rather than loud: the markup you are styling against simply lacks
-things 4.0.5 has — `--exe-fx-focus-color` read by the effects components (§11), the
-teacher-mode switch (§8), General Icons as Material Symbols, and `$exeExport.setUrlParam`
-(§9). A style verified against an older export can look finished and still be wrong. If a
+things 4.0.6 has — `--exe-fx-focus-color` read by the effects components (§11), the
+teacher-mode switch (§8), General Icons as Material Symbols, `$exeExport.setUrlParam`
+(§9) and presentation mode (§9). A style verified against an older export can look finished and still be wrong. If a
 check below reports a component as absent, confirm the export's version before concluding
 the style does not need to handle it.
 
@@ -114,8 +114,9 @@ exactly what a style breaks on, and you cannot test what you did not export.
 
 ### Previewing
 
-The three buttons at the top of `index.php` swap one iframe between the formats. For
-iterating on a single page it is faster to open it directly:
+The three buttons at the top of `index.php` swap one iframe between the formats. The
+**Presentation mode** switch beside them reloads the website with `?exe-presentation=1`
+(§9). For iterating on a single page it is faster to open it directly:
 
 ```
 contents/web/html/<page>.html
@@ -270,6 +271,7 @@ This is the single most common source of broken styles. Never assume any of thes
 | `.box-icon` | The iDevice has no icon; the header then carries `.no-icon` |
 | `.box.no-header` | No title, no icon and no toggle at all |
 | `#siteNav`, `.nav-buttons`, `#siteLogos` | Every format except the website |
+| `#exe-presentation-toggler` | Every format except the website, and the website too unless the URL carries `?exe-presentation`. Injected by the app |
 | `.exe-attachment-link`, `.exe-fx`, `.exe-dl`, `.exe-block-*` | Only if the author used them |
 
 Two consequences worth stating:
@@ -344,7 +346,7 @@ e.href = ref + '?' + 'nav=false';       // a second '?' if the link already had 
 window.location = this.href + '?nav=false';  // lands INSIDE the fragment if there is a #ancla
 ```
 
-Through those URLs travel `exe-teacher`, `q`, `print` and the four xAPI credentials, so
+Through those URLs travel `exe-teacher`, `exe-presentation`, `q`, `print` and the four xAPI credentials, so
 wiping the query **breaks LMS tracking and teacher mode**, and the exported links already
 arrive with parameters the application put there. Read the current value with
 `URLSearchParams`, not by searching the string:
@@ -355,6 +357,23 @@ if (new URLSearchParams(window.location.search).get('nav') === 'false') { … }
 
 Operate on `getAttribute('href')`, not on the `.href` property: the property absolutises
 the relative links the export writes.
+
+### Presentation mode drives your menu
+
+On the website, `?exe-presentation=1` turns on a reader-activated presentation mode: the
+app adds a `#exe-presentation-toggler` badge next to `#made-with-eXe`, puts
+`mode-presentation` on `<html>`, and takes `←`/`PageUp`, `→`/`PageDown`, `M` (menu) and `T`
+(teacher mode). It has no menu of its own — **it uses yours**:
+
+- It clicks **`#siteNavToggler`** and reads its **`aria-expanded`** straight after your
+  handler. Set it synchronously, in every branch.
+- It changes page by clicking **`a.nav-button-left`** and **`a.nav-button-right`**.
+- While presenting it writes `nav=true` or `nav=false` into the URL and the links. Keep
+  testing `=== 'false'`, as above.
+- It adds its parameters to `#siteNav a` and `.nav-buttons a` **after** your `init()`. If
+  you copy those hrefs into links of your own, reread them on click.
+- **Never bind those keys on `document`.** Calling `preventDefault()` on one disables the
+  mode for that key.
 
 ### If your own `style.js` runs at parse time
 
@@ -445,6 +464,8 @@ elements. Cheap to add, and it is a trap worth understanding before you accept i
   on that one thing is usually the real fix.
 - **Do not rely on `popover`/top-layer to escape an ancestor filter.** Chrome and Firefox
   disagree, and the difference is not feature-detectable from JS.
+- **The application's badges are under the filter too.** Re-invert `#made-with-eXe a` and
+  `#exe-presentation-toggler` in the same rule.
 
 **Variable-based** — reassign the `:root` palette inside a `html.dark-mode` block. More
 work up front, exact in every browser, leaves images alone, and it is the only one that

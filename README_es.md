@@ -2,11 +2,11 @@
 
 # eXeLearning Style Designer
 
-**Versión:** 4.0.5 · **Licencia:** AGPL
+**Versión:** 4.0.6 · **Licencia:** AGPL
 
 ## Descripción
 
-eXeLearning Style Designer es una herramienta diseñada para facilitar la creación de estilos personalizados para **eXeLearning 4.0.5**.
+eXeLearning Style Designer es una herramienta diseñada para facilitar la creación de estilos personalizados para **eXeLearning 4.0.6**.
 
 Con esta herramienta puedes editar y personalizar fácilmente la apariencia de tus proyectos eXeLearning generando nuevos estilos y empaquetándolos para su distribución.
 
@@ -22,11 +22,11 @@ Esta herramienta **está destinada a usuarios técnicos**. Está diseñada para 
 
 No incluye las medidas de seguridad necesarias. Esta herramienta está destinada únicamente a diseñadores para simplificar la creación de estilos para eXeLearning 4.
 
-⚠️ **Compatibilidad de versiones: eXeLearning 4.0.5.**
+⚠️ **Compatibilidad de versiones: eXeLearning 4.0.6.**
 
-Esta entrega está hecha para **eXeLearning 4.0.5**, y es la versión con la que se recomienda trabajar. Las tres exportaciones que cargues deben venir de 4.0.5: **el contenido exportado con versiones anteriores no está soportado**.
+Esta entrega está hecha para **eXeLearning 4.0.6**, y es la versión con la que se recomienda trabajar. Las tres exportaciones que cargues deben venir de 4.0.6: **el contenido exportado con versiones anteriores no está soportado**.
 
-El motivo es que el Diseñador previsualiza tu estilo contra el marcado exportado real, y 4.0.5 lo cambió: el color de foco que los componentes de efectos leen del estilo, el conmutador de modo profesor, los General Icons dibujados como Material Symbols y el ayudante de URL que usa la navegación. Un estilo comprobado contra una exportación antigua puede parecer terminado y estar mal en 4.0.5.
+El motivo es que el Diseñador previsualiza tu estilo contra el marcado exportado real, y las últimas versiones lo han cambiado: el color de foco que los componentes de efectos leen del estilo, el conmutador de modo profesor, los General Icons dibujados como Material Symbols y el ayudante de URL que usa la navegación llegaron en 4.0.5, y 4.0.6 añade un modo presentación para los sitios web que maneja el menú y los botones de navegación del propio estilo. Un estilo comprobado contra una exportación antigua puede parecer terminado y estar mal en 4.0.6.
 
 ---
 
@@ -93,7 +93,7 @@ Verás dos opciones:
   - Un paquete SCORM 1.2
 - **Use the sample contents (Usar los contenidos de ejemplo)** (la forma más fácil de empezar)
 
-Si eliges subir tus propias exportaciones, tienen que venir de **eXeLearning 4.0.5** (ver el aviso de compatibilidad de arriba), y asegúrate de que **todas las preferencias de exportación** (contador de páginas, buscador, etc.) estén habilitadas. Esto permite que tus exportaciones incluyan todos los elementos opcionales y que tu estilo sea totalmente compatible con los mismos. Incluye todas las combinaciones de cajas: con y sin icono, con y sin título, sin el botón de minimizar, etc., para verificar que tu estilo funcione correctamente en todos los casos.
+Si eliges subir tus propias exportaciones, tienen que venir de **eXeLearning 4.0.6** (ver el aviso de compatibilidad de arriba), y asegúrate de que **todas las preferencias de exportación** (contador de páginas, buscador, etc.) estén habilitadas. Esto permite que tus exportaciones incluyan todos los elementos opcionales y que tu estilo sea totalmente compatible con los mismos. Incluye todas las combinaciones de cajas: con y sin icono, con y sin título, sin el botón de minimizar, etc., para verificar que tu estilo funcione correctamente en todos los casos.
 
 ---
 
@@ -108,6 +108,8 @@ En la parte superior de la página, encontrarás tres botones de vista previa:
 - **SCORM 1.2**
 
 Haz clic en cada uno para ver tu estilo en ese formato de exportación.
+
+El interruptor **Presentation mode (Modo presentación)**, junto a ellos, recarga el sitio web con `?exe-presentation=1` para que compruebes cómo se comporta tu estilo cuando alguien lo presenta con el teclado: el menú se pliega, las flechas cambian de página y aparece un distintivo *Presentation mode* abajo a la derecha.
 
 ---
 
