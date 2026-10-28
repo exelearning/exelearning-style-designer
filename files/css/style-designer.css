@@ -24,6 +24,16 @@ iframe {
     position: relative;
     top: -1px;
 }
+#presentationModeSwitch {
+    display: inline-block;
+    margin: 0 0 0 1em;
+    color: #FFF;
+    font-size: .875rem;
+    vertical-align: middle;
+}
+#presentationModeSwitch .form-check-input:disabled ~ .form-check-label {
+    opacity: .5;
+}
 #actionsPanel {
     float: right;
 }

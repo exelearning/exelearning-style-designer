@@ -13,17 +13,31 @@
         <link rel="stylesheet" href="files/css/style-designer.css">
         <script>
             var sd = {
+                format : 'web',
                 init : function(){
                     this.viewer = $("#viewer");
                     $('.btn-group .btn').on('click', function(){
-                        var date = new Date();
-                        date = date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + ("0" + date.getHours() ).slice(-2) + ("0" + date.getMinutes()).slice(-2) + ("0" + date.getSeconds()).slice(-2);
-                        if (this.id == 'page' || '<?php echo $defaultIndexFile; ?>' == 'index.html') sd.viewer.attr('src', 'contents/' + this.id + '/index.html?v='+ date);
-                        else sd.viewer.attr('src', 'contents/' + this.id + '/html/<?php echo $defaultIndexFile; ?>?v='+ date);
+                        sd.format = this.id;
+                        sd.load();
+                    });
+                    // Presentation mode (eXeLearning 4.0.6): website only
+                    $('#presentationMode').on('change', function(){
+                        sd.load();
                     });
                     $("button#_blank").on('click', function(){
                         window.open(sd.viewer.attr('src'));
                     });
+                },
+                load : function(){
+                    var date = new Date();
+                    date = date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + ("0" + date.getHours() ).slice(-2) + ("0" + date.getMinutes()).slice(-2) + ("0" + date.getSeconds()).slice(-2);
+                    var src;
+                    if (this.format == 'page' || '<?php echo $defaultIndexFile; ?>' == 'index.html') src = 'contents/' + this.format + '/index.html?v='+ date;
+                    else src = 'contents/' + this.format + '/html/<?php echo $defaultIndexFile; ?>?v='+ date;
+                    var isWeb = this.format == 'web';
+                    $('#presentationMode').prop('disabled', !isWeb);
+                    if (isWeb && $('#presentationMode').is(':checked')) src += '&exe-presentation=1';
+                    this.viewer.attr('src', src);
                 }
             }
             $(function(){
@@ -38,6 +52,10 @@
                 <button type="button" class="btn btn-light" id="web">Website</button>
                 <button type="button" class="btn btn-light" id="page">Single page</button>
                 <button type="button" class="btn btn-light" id="scorm">SCORM 1.2</button>
+            </div>
+            <div class="form-check form-switch" id="presentationModeSwitch" title="Website only: opens it with ?exe-presentation=1">
+                <input class="form-check-input" type="checkbox" role="switch" id="presentationMode" autocomplete="off">
+                <label class="form-check-label" for="presentationMode">Presentation mode</label>
             </div>
             <?php } ?>
             <span id="actionsPanel">
